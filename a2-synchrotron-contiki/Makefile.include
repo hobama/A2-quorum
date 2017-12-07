@@ -97,7 +97,7 @@ ifeq ($(CONTIKI_WITH_CHAOS),1)
   MODULES += core/net/mac/chaos/lib/timing-unit-test/slotted-multi-test    
   MODULES += core/net/mac/chaos/lib/glossy
   MODULES += core/net/mac/chaos/lib/max
-  MODULES += core/net/mac/chaos/lib/minmax     
+  MODULES += core/net/mac/chaos/lib/minmax	    
   MODULES += core/net/mac/chaos/lib/diss
   MODULES += core/net/mac/chaos/lib/vote
   MODULES += core/net/mac/chaos/lib/2pc    
