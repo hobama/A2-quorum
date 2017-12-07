@@ -43,7 +43,7 @@
 #include "chaos.h"
 #include "chaos-random-generator.h"
 #include "node.h"
-#include "max.h"
+#include "minmax.h"
 #include "chaos-config.h"
 
 #undef ENABLE_COOJA_DEBUG
@@ -90,6 +90,7 @@
 
 typedef struct __attribute__((packed)) max_t_struct {
   uint16_t max;
+  uint16_t min;
   uint8_t flags[];
 } max_t;
 
@@ -121,6 +122,7 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
     got_valid_rx = 1;
     //set max
     tx_max->max = tx_max->max >= rx_max->max ? tx_max->max : rx_max->max;
+    tx_max->min = tx_max->min <= rx_max->min ? tx_max->min : rx_max->min;
     //rx_max->max = tx_max->max; //why??
 
     //merge flags and do tx decision based on flags
@@ -186,6 +188,7 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
   if(complete || slot_count >= MAX_ROUND_MAX_SLOTS - 1) {
     max_flags = tx_max->flags;
     max_local.max.max = tx_max->max;
+    max_local.max.min = tx_max->min;
   }
 
   /* reporting progress */
@@ -210,7 +213,7 @@ uint16_t max_get_off_slot(){
   return off_slot;
 }
 
-int max_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* max_value, uint8_t** final_flags)
+int max_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* max_value, uint16_t* min_value, uint8_t** final_flags)
 {
   off_slot = MAX_ROUND_MAX_SLOTS;
   tx = 0;
@@ -225,6 +228,7 @@ int max_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t*
 
   memset(&max_local, 0, sizeof(max_local));
   max_local.max.max = *max_value;
+  max_local.max.min = *min_value;
   /* set my flag */
   unsigned int array_index = chaos_node_index / 8;
   unsigned int array_offset = chaos_node_index % 8;
@@ -234,6 +238,7 @@ int max_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t*
 
   memcpy(max_local.max.flags, max_flags, max_get_flags_length());
   *max_value = max_local.max.max;
+  *min_value = max_local.max.min;
   *final_flags = max_local.flags;
   return completion_slot;
 }

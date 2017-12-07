@@ -188,6 +188,7 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
   if(complete || slot_count >= MAX_ROUND_MAX_SLOTS - 1) {
     max_flags = tx_max->flags;
     max_local.max.max = tx_max->max;
+    max_local.max.min = tx_max->min;
   }
 
   /* reporting progress */
