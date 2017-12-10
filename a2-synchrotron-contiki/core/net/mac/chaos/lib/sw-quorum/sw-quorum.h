@@ -37,8 +37,8 @@
  *         Olaf Landsiedel <olafl@chalmers.se>
  */
 
-#ifndef _MAX_H_
-#define _MAX_H_
+#ifndef _QUORUM_H_
+#define _QUORUM_H_
 
 #include "chaos.h"
 #include "testbed.h"
@@ -53,12 +53,14 @@
 
 #define MAX_SLOT_LEN_DCO      (MAX_SLOT_LEN*CLOCK_PHI)    //TODO needs calibration
 
-int max_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* max_value, uint16_t* min_value, uint8_t** final_flags);
+#define NODE_COUNT 4
 
-int max_is_pending(const uint16_t round_count);
+int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t operation, uint8_t** final_flags);
 
-int max_get_flags_length(void);
+int q_is_pending(const uint16_t round_count);
 
-uint16_t max_get_off_slot();
+int quorum_get_flags_length(void);
 
-#endif /* _MAX_H_ */
+uint16_t quorum_get_off_slot();
+
+#endif /* _QUORUM_H_ */

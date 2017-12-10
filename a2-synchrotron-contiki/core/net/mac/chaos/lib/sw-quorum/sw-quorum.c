@@ -132,10 +132,9 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
       }
     } 
     else { // Write Operation Receiven
-      if (tx_entry->tag >= rx_entry->tag){
-
+        tx_entry->tag = rx_entry->tag;
+        tx_entry->value = rx_entry->value;
       }
-
     }
 
     //merge flags and do tx decision based on flags
@@ -144,14 +143,14 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
     int i;
     for( i = 0; i < FLAGS_LEN; i++){
       COOJA_DEBUG_STR("f");
-      tx |= (rx_max->flags[i] != tx_max->flags[i]);
-      tx_max->flags[i] |= rx_max->flags[i];
-      flag_sum += tx_max->flags[i];
+      tx |= (tx_entry->flags[i] != tx_entry->flags[i]);
+      tx_entry->flags[i] |= tx_entry->flags[i];
+      flag_sum += tx_entry->flags[i];
     }
     rx_delta = tx;
 
     //all flags are set? Final flood: transmit result aggressively
-    if( flag_sum >= FLAG_SUM ){
+    if( flag_sum >= (FLAG_SUM/2)+1 ){
       if(!complete){ //store when we reach completion
         completion_slot = slot_count;
       }
@@ -159,45 +158,6 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
       complete = 1;
       LEDS_ON(LEDS_GREEN);
     }
-  }
-
-  // Perform Write every 3 rounds
-  if (round_count % 3 == 0 && IS_INITIATOR()) {
-    tx_entry.entry = entry_local.entry*2+1;
-    //Single writer, we do not need to perform a read
-    tx_entry.tag = ++timestamp;
-    next_state = CHAOS_TX;
-  }
-  //TODO: reset final flood counter tx_count_complete on rx delta
-  /* merge valid rx data & flags */
-  if(chaos_txrx_success && current_state == CHAOS_RX && IS_INITIATOR()) {
-    got_valid_rx = 1;
-    tx_max->max = tx_max->max >= rx_max->max ? tx_max->max : rx_max->max;
-    tx_max->min = tx_max->min <= rx_max->min ? tx_max->min : rx_max->min;
-    //rx_max->max = tx_max->max; //why??
-
-    //merge flags and do tx decision based on flags
-    tx = 0;
-    uint16_t flag_sum = 0;
-    int i;
-    for( i = 0; i < FLAGS_LEN; i++){
-      COOJA_DEBUG_STR("f");
-      tx |= (rx_max->flags[i] != tx_max->flags[i]);
-      tx_max->flags[i] |= rx_max->flags[i];
-      flag_sum += tx_max->flags[i];
-    }
-    rx_delta = tx;
-
-    //all flags are set? Final flood: transmit result aggressively
-    if( flag_sum >= FLAG_SUM ){
-      if(!complete){ //store when we reach completion
-        completion_slot = slot_count;
-      }
-      tx = 1;
-      complete = 1;
-      LEDS_ON(LEDS_GREEN);
-    }
-  }
 
   /* decide next state */
   chaos_state_t next_state = CHAOS_RX;
@@ -237,13 +197,13 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
 
   /* for reporting the final result */
   if(complete || slot_count >= MAX_ROUND_MAX_SLOTS - 1) {
-    max_flags = tx_max->flags;
-    entry_local.max.max = tx_max->max;
-    entry_local.max.min = tx_max->min;
+    entry_flags = tx_entry->flags;
+    entry_local.entry.value = tx_entry->value;
+    entry_local.entry.tag = tx_entry->tag;
   }
 
   /* reporting progress */
-  *app_flags = (current_state == CHAOS_TX) ? tx_max->flags : rx_max->flags;
+  *app_flags = (current_state == CHAOS_TX) ? tx_entry->flags : rx_entry->flags;
 
   int end = (slot_count >= MAX_ROUND_MAX_SLOTS - 2) || (next_state == CHAOS_OFF);
   if(end){
@@ -252,15 +212,15 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
   return next_state;
 }
 
-int max_get_flags_length() {
+int quorum_get_flags_length() {
   return FLAGS_LEN;
 }
 
-int max_is_pending(const uint16_t round_count){
+int q_is_pending(const uint16_t round_count){
   return 1;
 }
 
-uint16_t max_get_off_slot(){
+uint16_t quorum_get_off_slot(){
   return off_slot;
 }
 
@@ -280,19 +240,20 @@ int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16
   memset(&entry_local, 0, sizeof(entry_local));
   entry_local.entry.value = *value;
   entry_local.entry.tag = *tag;
-  entry_local.entry.operation = *operation;
+  entry_local.entry.operation = operation;
 
   /* set my flag */
   unsigned int array_index = chaos_node_index / 8;
   unsigned int array_offset = chaos_node_index % 8;
   entry_local.entry.flags[array_index] |= 1 << (array_offset);
 
-  chaos_round(round_number, app_id, (const uint8_t const*)&entry_local.entry, sizeof(entry_t) + max_get_flags_length(), MAX_SLOT_LEN_DCO, MAX_ROUND_MAX_SLOTS, max_get_flags_length(), process);
+  chaos_round(round_number, app_id, (const uint8_t const*)&entry_local.entry, sizeof(entry_t) + quorum_get_flags_length(), MAX_SLOT_LEN_DCO, MAX_ROUND_MAX_SLOTS, quorum_get_flags_length(), process);
 
-  memcpy(entry_local.entry.flags, entry_flags, max_get_flags_length());
+  memcpy(entry_local.entry.flags, entry_flags, quorum_get_flags_length());
   *value = entry_local.entry.value;
   *tag = entry_local.entry.tag;
-  *operation = entry_local.entry.operation;
+  //*operation = entry_local.entry.operation;
   *final_flags = entry_local.flags;
+
   return completion_slot;
 }

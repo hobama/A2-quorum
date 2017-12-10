@@ -44,18 +44,20 @@
 
 #include "chaos-control.h"
 #include "node.h"
-#include "minmax.h"
+#include "sw-quorum.h"
 
 static uint16_t value = 0;
 static uint16_t tag = 0;
+static uint8_t operation = 1;
 static uint16_t round_count_local = 0;
 static uint8_t* flags;
 static uint16_t complete = 0;
 static uint16_t off_slot;
+//chaos_node_count = NODE_COUNT;
 
 static void round_begin(const uint16_t round_count, const uint8_t id);
 
-CHAOS_APP(chaos_quorum, MAX_SLOT_LEN, MAX_ROUND_MAX_SLOTS, 1, max_is_pending, round_begin);
+CHAOS_APP(chaos_quorum, MAX_SLOT_LEN, MAX_ROUND_MAX_SLOTS, 1, q_is_pending, round_begin);
 #if NETSTACK_CONF_WITH_CHAOS_NODE_DYNAMIC
 #include "join.h"
 CHAOS_APPS(&join, &chaos_quorum);
@@ -78,14 +80,20 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 	while( 1 ){
 		PROCESS_YIELD();
 		if(chaos_has_node_index){
-      printf("{rd %u res} max: %u, min: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, chaos_node_count);
+      //if (round_count_local % NODE_COUNT m == chaos_node_index) {}
+        if (IS_INITIATOR()) {
+          printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, NODE_COUNT);
+        }
+        else { printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, NODE_COUNT); }
+      
+      //printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, chaos_node_count);
 //      int latency = complete *
 //      printf("{rd %u prf} latency = %f, total slot time = %f\n", complete, off_slot);
 
       if(complete == 0){
         int i;
         printf("{rd %u fl}", round_count_local);
-        for( i=0; i<max_get_flags_length(); i++ ){
+        for( i=0; i<quorum_get_flags_length(); i++ ){
           printf(" %02x", flags[i]);
         }
         printf("\n");
@@ -111,12 +119,20 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 }
 
 static void round_begin(const uint16_t round_count, const uint8_t id){
-  value = 0;
-  tag = 0;
-  complete = quorum_round_begin(round_count, id, &value, &tag, &flags);
-  off_slot = max_get_off_slot();
+  if(IS_INITIATOR()) {
+    operation = 0;
+    tag = round_count_local+1;
+    value = (chaos_node_index+1)*(round_count_local);
+    printf("Init writing :%u round is :%u", value, tag);
+  } /*else {  
+    operation = 1;
+    tag = 0;
+    value = 0;
+  }*/
+  complete = quorum_round_begin(round_count, id, &value, &tag, operation, &flags);
+  off_slot = quorum_get_off_slot();
   round_count_local = round_count;
-  process_poll(&chaos_max_app_process);
+  process_poll(&chaos_quorum_process);
 }
 
 
