@@ -91,7 +91,7 @@
 typedef struct __attribute__((packed)) max_t_struct {
   uint16_t value;
   uint16_t tag;
-  uint8_t ack;
+  uint8_t operation;   // 0 = Write,  1 =  Read 
   uint8_t flags[];
 } entry_t;
 
@@ -117,6 +117,49 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
   entry_t* tx_entry = (entry_t*)tx_payload;
   entry_t* rx_entry = (entry_t*)rx_payload;
   uint8_t rx_delta = 0;
+
+   /* merge valid rx data & flags */
+  if(chaos_txrx_success && current_state == CHAOS_RX) {
+    got_valid_rx = 1;
+
+    if (rx_entry->operation) { // Read operation Received
+      if (tx_entry->tag >= rx_entry->tag) {
+        tx_entry->tag = tx_entry->tag;
+        tx_entry->value = tx_entry->value;
+      } else {
+        tx_entry->tag = rx_entry->tag;
+        tx_entry->value = rx_entry->value;
+      }
+    } 
+    else { // Write Operation Receiven
+      if (tx_entry->tag >= rx_entry->tag){
+
+      }
+
+    }
+
+    //merge flags and do tx decision based on flags
+    tx = 0;
+    uint16_t flag_sum = 0;
+    int i;
+    for( i = 0; i < FLAGS_LEN; i++){
+      COOJA_DEBUG_STR("f");
+      tx |= (rx_max->flags[i] != tx_max->flags[i]);
+      tx_max->flags[i] |= rx_max->flags[i];
+      flag_sum += tx_max->flags[i];
+    }
+    rx_delta = tx;
+
+    //all flags are set? Final flood: transmit result aggressively
+    if( flag_sum >= FLAG_SUM ){
+      if(!complete){ //store when we reach completion
+        completion_slot = slot_count;
+      }
+      tx = 1;
+      complete = 1;
+      LEDS_ON(LEDS_GREEN);
+    }
+  }
 
   // Perform Write every 3 rounds
   if (round_count % 3 == 0 && IS_INITIATOR()) {
@@ -221,7 +264,7 @@ uint16_t max_get_off_slot(){
   return off_slot;
 }
 
-int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t** final_flags)
+int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t operation, uint8_t** final_flags)
 {
   off_slot = MAX_ROUND_MAX_SLOTS;
   tx = 0;
@@ -236,17 +279,20 @@ int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16
 
   memset(&entry_local, 0, sizeof(entry_local));
   entry_local.entry.value = *value;
-  entry_local.max.min = *tag;
+  entry_local.entry.tag = *tag;
+  entry_local.entry.operation = *operation;
+
   /* set my flag */
   unsigned int array_index = chaos_node_index / 8;
   unsigned int array_offset = chaos_node_index % 8;
-  entry_local.max.flags[array_index] |= 1 << (array_offset);
+  entry_local.entry.flags[array_index] |= 1 << (array_offset);
 
   chaos_round(round_number, app_id, (const uint8_t const*)&entry_local.entry, sizeof(entry_t) + max_get_flags_length(), MAX_SLOT_LEN_DCO, MAX_ROUND_MAX_SLOTS, max_get_flags_length(), process);
 
   memcpy(entry_local.entry.flags, entry_flags, max_get_flags_length());
-  *max_value = entry_local.entry.value;
-  *min_value = entry_local.entry.tag;
+  *value = entry_local.entry.value;
+  *tag = entry_local.entry.tag;
+  *operation = entry_local.entry.operation;
   *final_flags = entry_local.flags;
   return completion_slot;
 }

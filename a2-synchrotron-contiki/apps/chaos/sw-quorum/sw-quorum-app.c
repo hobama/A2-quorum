@@ -118,3 +118,14 @@ static void round_begin(const uint16_t round_count, const uint8_t id){
   round_count_local = round_count;
   process_poll(&chaos_max_app_process);
 }
+
+
+
+
+/* Perform Write every 3 rounds
+  if (round_count % 3 == 0 && IS_INITIATOR()) {
+    tx_entry.entry = entry_local.entry*2+1;
+    //Single writer, we do not need to perform a read
+    tx_entry.tag = ++timestamp;
+    next_state = CHAOS_TX;
+  } */
