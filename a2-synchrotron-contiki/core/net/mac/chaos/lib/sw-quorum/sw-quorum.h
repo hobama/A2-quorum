@@ -53,8 +53,6 @@
 
 #define MAX_SLOT_LEN_DCO      (MAX_SLOT_LEN*CLOCK_PHI)    //TODO needs calibration
 
-#define NODE_COUNT 4
-
 int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t operation, uint8_t** final_flags);
 
 int q_is_pending(const uint16_t round_count);

@@ -53,7 +53,6 @@ static uint16_t round_count_local = 0;
 static uint8_t* flags;
 static uint16_t complete = 0;
 static uint16_t off_slot;
-//chaos_node_count = NODE_COUNT;
 
 static void round_begin(const uint16_t round_count, const uint8_t id);
 
@@ -82,14 +81,12 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 		if(chaos_has_node_index){
       //if (round_count_local % NODE_COUNT m == chaos_node_index) {}
         if (IS_INITIATOR()) {
-          printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, NODE_COUNT);
+          printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, chaos_node_count);
         }
-        else { printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, NODE_COUNT); }
+        else { printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, chaos_node_count); }
       
-      //printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, chaos_node_count);
 //      int latency = complete *
 //      printf("{rd %u prf} latency = %f, total slot time = %f\n", complete, off_slot);
-
       if(complete == 0){
         int i;
         printf("{rd %u fl}", round_count_local);
@@ -122,8 +119,8 @@ static void round_begin(const uint16_t round_count, const uint8_t id){
   if(IS_INITIATOR()) {
     operation = 0;
     tag = round_count_local+1;
-    value = (chaos_node_index+1)*(round_count_local);
-    printf("Init writing :%u round is :%u", value, tag);
+    value = (chaos_node_count)*(round_count_local) % 13;
+    printf("Init writing :%u tag is :%u", value, tag);
   } /*else {  
     operation = 1;
     tag = 0;

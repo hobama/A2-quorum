@@ -53,7 +53,7 @@
 
 #define MAX_SLOT_LEN_DCO      (MAX_SLOT_LEN*CLOCK_PHI)    //TODO needs calibration
 
-int max_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* max_value, uint16_t* min_value, uint8_t** final_flags);
+int max_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* max_value, uint8_t** final_flags);
 
 int max_is_pending(const uint16_t round_count);
 

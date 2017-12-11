@@ -135,7 +135,6 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
         tx_entry->tag = rx_entry->tag;
         tx_entry->value = rx_entry->value;
       }
-    }
 
     //merge flags and do tx decision based on flags
     tx = 0;
@@ -143,8 +142,8 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
     int i;
     for( i = 0; i < FLAGS_LEN; i++){
       COOJA_DEBUG_STR("f");
-      tx |= (tx_entry->flags[i] != tx_entry->flags[i]);
-      tx_entry->flags[i] |= tx_entry->flags[i];
+      tx |= (rx_entry->flags[i] != tx_entry->flags[i]);
+      tx_entry->flags[i] |= rx_entry->flags[i];
       flag_sum += tx_entry->flags[i];
     }
     rx_delta = tx;
@@ -158,6 +157,7 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
       complete = 1;
       LEDS_ON(LEDS_GREEN);
     }
+  }
 
   /* decide next state */
   chaos_state_t next_state = CHAOS_RX;
