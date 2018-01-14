@@ -31,10 +31,10 @@
  *******************************************************************************/
 /**
  * \file
- *         A2-Synchrotron Max application.
+ *         A2-Synchrotron Single Writer application.
  * \author
- *         Beshr Al Nahas <beshr@chalmers.se>
- *         Olaf Landsiedel <olafl@chalmers.se>
+ *          
+ *         Konstantinos Peratinos <konper@student.chalmers.se>
  *
  */
 

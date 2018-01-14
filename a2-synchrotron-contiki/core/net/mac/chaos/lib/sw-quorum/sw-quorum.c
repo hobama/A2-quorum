@@ -29,12 +29,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
-/*
+/**
  * \file
- *         Max library
+ *         SW Quorum Library
  * \author
- *         Beshr Al Nahas <beshr@chalmers.se>
- *         Olaf Landsiedel <olafl@chalmers.se>
+ *          
+ *         Konstantinos Peratinos <konper@student.chalmers.se>
+ *
  */
 
 #include "contiki.h"
@@ -43,7 +44,7 @@
 #include "chaos.h"
 #include "chaos-random-generator.h"
 #include "node.h"
-#include "minmax.h"
+#include "sw-quorum.h"
 #include "chaos-config.h"
 
 #undef ENABLE_COOJA_DEBUG

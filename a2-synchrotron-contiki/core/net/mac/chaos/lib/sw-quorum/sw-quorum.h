@@ -29,12 +29,13 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
-/*
+/**
  * \file
- *         Max library
+ *         SW Quorum Library
  * \author
- *         Beshr Al Nahas <beshr@chalmers.se>
- *         Olaf Landsiedel <olafl@chalmers.se>
+ *          
+ *         Konstantinos Peratinos <konper@student.chalmers.se>
+ *
  */
 
 #ifndef _QUORUM_H_
