@@ -31,10 +31,9 @@
  *******************************************************************************/
 /*
  * \file
- *         Max library
+ *         Multi-writer Quorum library
  * \author
- *         Beshr Al Nahas <beshr@chalmers.se>
- *         Olaf Landsiedel <olafl@chalmers.se>
+ *         Konstantinos Peratinos <konper@student.chalmers.se>
  */
 
 #include "contiki.h"
@@ -91,7 +90,8 @@
 typedef struct __attribute__((packed)) max_t_struct {
   uint16_t value;
   uint16_t tag;
-  uint8_t operation;   // 0 = Write,  1 =  Read 
+  uint8_t operation;   // 0 = Write,  1 =  Read
+  uint8_t node_id;
   uint8_t flags[];
 } entry_t;
 
@@ -224,7 +224,7 @@ uint16_t quorum_get_off_slot(){
   return off_slot;
 }
 
-int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t operation, uint8_t** final_flags)
+int quorum_round_begin(const uint16_t round_number, const uint8_t id, uint16_t* value, uint16_t* tag, uint8_t operation, uint8_t** final_flags)
 {
   off_slot = MAX_ROUND_MAX_SLOTS;
   tx = 0;
@@ -241,13 +241,15 @@ int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16
   entry_local.entry.value = *value;
   entry_local.entry.tag = *tag;
   entry_local.entry.operation = operation;
+  entry_local.entry.node_id = id;
+
 
   /* set my flag */
   unsigned int array_index = chaos_node_index / 8;
   unsigned int array_offset = chaos_node_index % 8;
   entry_local.entry.flags[array_index] |= 1 << (array_offset);
 
-  chaos_round(round_number, app_id, (const uint8_t const*)&entry_local.entry, sizeof(entry_t) + quorum_get_flags_length(), MAX_SLOT_LEN_DCO, MAX_ROUND_MAX_SLOTS, quorum_get_flags_length(), process);
+  chaos_round(round_number, id, (const uint8_t const*)&entry_local.entry, sizeof(entry_t) + quorum_get_flags_length(), MAX_SLOT_LEN_DCO, MAX_ROUND_MAX_SLOTS, quorum_get_flags_length(), process);
 
   memcpy(entry_local.entry.flags, entry_flags, quorum_get_flags_length());
   *value = entry_local.entry.value;
