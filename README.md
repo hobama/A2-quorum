@@ -2,9 +2,9 @@
 
 A2-quorum implements a shared-memory abstraction over dynamic sensor networks, using the A2-agreement over the air system for Sky motes running Contiki Os. The goal of the project is to explore the usage of quorum based systems as a means of vehicle coordination, and was developed as a part of the Autonomous and Cooperative vehicular systems course in Chalmers university.
 
-# ############# IMPORTANT ########################
+# ############# IMPORTANT ####################
 For the Multi-writer Quorum, make sure the initiator is set to 1!
-# ################################################
+##############################################
 
 # A2-Synchrotron
 
