@@ -80,7 +80,7 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 		PROCESS_YIELD();
 		if(chaos_has_node_index){
       //if (round_count_local % NODE_COUNT m == chaos_node_index) {}
-        if (IS_INITIATOR() || node_id == chaos_node_count-1) {
+        if ((IS_INITIATOR() || node_id == chaos_node_count-1) && operation == 0) {
           printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, chaos_node_count);
         }
         else { printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, chaos_node_count); }
@@ -117,13 +117,14 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 
 static void round_begin(const uint16_t round_count, const uint8_t id){
   // Always true for Initiator == 1
+  operation = 1;
   if(IS_INITIATOR() && round_count_local%node_id == 0) {
     operation = 0;
    	tag = round_count_local+1;
    	value = (chaos_node_count)*(round_count_local) % 13;
    	printf("Init writing :%u tag is :%u", value, tag);	
   }else if(node_id == chaos_node_count-1) {  
-    operation = 1;
+    operation = 0;
     tag = round_count_local+1;
     value = 88;
     printf("2nd writer :%u tag is :%u", value, tag);	

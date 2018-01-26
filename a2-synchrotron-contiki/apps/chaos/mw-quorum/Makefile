@@ -1,6 +1,6 @@
 TARGET ?= sky
 
-CONTIKI_PROJECT = sw-quorum-app
+CONTIKI_PROJECT = mw-quorum-app
 CONTIKI_WITH_CHAOS = 1
 ifeq ($(dynamic),1)
 	CHAOS_NODE_DYNAMIC=1
