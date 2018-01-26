@@ -102,7 +102,7 @@ typedef struct __attribute__((packed)) max_t_local_struct {
 
 static int tx = 0;
 static int complete = 0;
-static uint16_t timestamp = 0;
+//static uint16_t timestamp = 0;
 static uint16_t completion_slot, off_slot;
 static int tx_count_complete = 0;
 static int invalid_rx_count = 0;
@@ -123,19 +123,23 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
     got_valid_rx = 1;
 
     if (rx_entry->operation) { // Read operation Received
-      if (tx_entry->tag >= rx_entry->tag) {
-        tx_entry->tag = tx_entry->tag;
-        tx_entry->value = tx_entry->value;
-      } else {
+      if (tx_entry->tag <= rx_entry->tag) {
         tx_entry->tag = rx_entry->tag;
         tx_entry->value = rx_entry->value;
       }
-    } 
-    else { // Write Operation Receiven
-        tx_entry->tag = rx_entry->tag;
-        tx_entry->value = rx_entry->value;
-      }
-
+    } else { // Write Operation Receiven
+        if (tx_entry->tag == rx_entry->tag) {
+          if (tx_entry->node_id > rx_entry->node_id) {
+            tx_entry->tag = rx_entry->tag;
+            tx_entry->value = rx_entry->value;
+            tx_entry->node_id = rx_entry->node_id;
+          }
+        } else if(tx_entry->tag < rx_entry->tag) {
+          tx_entry->tag = rx_entry->tag;
+          tx_entry->value = rx_entry->value;
+          tx_entry->node_id = rx_entry->node_id;
+        }
+    }
     //merge flags and do tx decision based on flags
     tx = 0;
     uint16_t flag_sum = 0;
