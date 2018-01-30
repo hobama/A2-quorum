@@ -109,7 +109,7 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
       }
 #endif
 		} else {
-      printf("{rd %u res} max: waiting to join, n: %u\n", round_count_local, chaos_node_count);
+      printf("{rd %u res} Quorum: waiting to join, n: %u\n", round_count_local, chaos_node_count);
 		}
 	}
 	PROCESS_END();

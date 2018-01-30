@@ -122,19 +122,27 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
   if(chaos_txrx_success && current_state == CHAOS_RX) {
     got_valid_rx = 1;
 
-    if (rx_entry->operation) { // Read operation Received
-      if (tx_entry->tag <= rx_entry->tag) {
-        tx_entry->tag = rx_entry->tag;
-        tx_entry->value = rx_entry->value;
-      }
-    } else { // Write Operation Receiven
-        if (tx_entry->tag == rx_entry->tag) {
-          if (tx_entry->node_id > rx_entry->node_id) {
-            tx_entry->tag = rx_entry->tag;
+    if (rx_entry->operation) { 
+      if (tx_entry->tag == rx_entry->tag && tx_entry->node_id < rx_entry->node_id) {
             tx_entry->value = rx_entry->value;
             tx_entry->node_id = rx_entry->node_id;
-          }
-        } else if(tx_entry->tag < rx_entry->tag) {
+          } else if(tx_entry->tag < rx_entry->tag) {
+          tx_entry->tag = rx_entry->tag;
+          tx_entry->value = rx_entry->value;
+          tx_entry->node_id = rx_entry->node_id;
+        }
+
+
+    // Read operation Received
+       /* if (tx_entry->node_id < rx_entry->node_id) {
+            tx_entry->value = rx_entry->value;
+            tx_entry->node_id = rx_entry->node_id;
+          }*/
+    } else { // Write Operation Receiven
+        if (tx_entry->tag == rx_entry->tag && tx_entry->node_id < rx_entry->node_id) {
+            tx_entry->value = rx_entry->value;
+            tx_entry->node_id = rx_entry->node_id;
+          } else if(tx_entry->tag < rx_entry->tag) {
           tx_entry->tag = rx_entry->tag;
           tx_entry->value = rx_entry->value;
           tx_entry->node_id = rx_entry->node_id;
