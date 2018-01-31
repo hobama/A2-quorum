@@ -49,6 +49,7 @@
 static uint16_t value = 0;
 static uint16_t tag = 0;
 static uint8_t operation = 1;
+static uint16_t writer_id = 1;
 static uint16_t round_count_local = 0;
 static uint8_t* flags;
 static uint16_t complete = 0;
@@ -81,10 +82,11 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 		if(chaos_has_node_index){
       //if (round_count_local % NODE_COUNT m == chaos_node_index) {}
         if ((IS_INITIATOR() || node_id == chaos_node_count) && operation == 0) {
-          printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, chaos_node_count);
+          printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, writer id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, writer_id, chaos_node_count);
         }
-        else { printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, node id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, node_id, chaos_node_count); }
-      
+        else { 
+          printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, writer id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, writer_id, chaos_node_count);
+        }
 //      int latency = complete *
 //      printf("{rd %u prf} latency = %f, total slot time = %f\n", complete, off_slot);
       if(complete == 0){
@@ -118,16 +120,18 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 static void round_begin(const uint16_t round_count, const uint8_t id){
   // Always true for Initiator == 1
   operation = 1;
+  writer_ids = node_id;
   // Nodes > 2  --- %2 is a writing round
   if((IS_INITIATOR() || node_id == chaos_node_count) && (round_count_local % 2) == 0) {
     operation = 0;
    	tag = tag+1;
    	value = node_id*10 + tag;
-   	printf("Init writing :%u tag is :%u", value, tag);	
+   	printf("Init writing :%u tag is :%u\n", value, tag);	
   }
-  complete = quorum_round_begin(round_count, id, &value, &tag, operation, &flags);
+  complete = quorum_round_begin(round_count, id, &value, &tag, operation, &writer_id, &flags);
   off_slot = quorum_get_off_slot();
   round_count_local = round_count;
+  //id = node_id;
   process_poll(&chaos_quorum_process);
 }
 
