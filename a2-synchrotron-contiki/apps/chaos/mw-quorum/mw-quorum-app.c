@@ -82,8 +82,8 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 		if(chaos_has_node_index){
       //if (round_count_local % NODE_COUNT m == chaos_node_index) {}
         if ((IS_INITIATOR() || node_id == chaos_node_count) && (round_count_local % 2 == 1)) {
-          printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, writer id: %u, n: %u\n",
-           round_count_local, value, tag, complete, off_slot, writer_id, chaos_node_count);
+          printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, n: %u\n",
+           round_count_local, value, tag, complete, off_slot, chaos_node_count);
         }
         else { 
           printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, writer id: %u, n: %u\n",
@@ -135,6 +135,7 @@ static void round_begin(const uint16_t round_count, const uint8_t id){
   off_slot = quorum_get_off_slot();
   round_count_local = round_count;
   writer_id = operation;
+  printf("{The writer is : %u\n", writer_id);
   process_poll(&chaos_quorum_process);
 }
 

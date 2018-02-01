@@ -127,7 +127,7 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
         if (tx_entry->tag < rx_entry->tag) {
             tx_entry->value = rx_entry->value;
             tx_entry->tag = rx_entry->tag;
-            //tx_entry->writer_id = rx_entry->writer_id;
+            tx_entry->writer_id = rx_entry->writer_id;
           }
 
              /*if (tx_entry->tag == rx_entry->tag && tx_entry->writer_id < rx_entry->writer_id) {
@@ -256,7 +256,7 @@ int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16
   memset(&entry_local, 0, sizeof(entry_local));
   entry_local.entry.value = *value;
   entry_local.entry.tag = *tag;
-  entry_local.entry.writer_id = 3;
+  entry_local.entry.writer_id = node_id;
   entry_local.entry.operation = *operation;
   
    
