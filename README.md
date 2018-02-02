@@ -9,7 +9,7 @@ For the Multi-writer Quorum, make sure the initiator is set to 1!
 Running Cooja headless
 
 ```
-ant run_nogui -Dargs='../../../../ **simulationfile.csc** -contiki=../../../'
+ant run_nogui -Dargs='../../../../**simulationfile.csc** -contiki=../../../'
 ```
 # A2-Synchrotron
 
