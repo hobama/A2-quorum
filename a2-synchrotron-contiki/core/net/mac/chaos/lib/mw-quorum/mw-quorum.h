@@ -29,13 +29,11 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
-/**
+/*
  * \file
- *         SW Quorum Library
+ *         Multi-writer Quorum library 
  * \author
- *          
  *         Konstantinos Peratinos <konper@student.chalmers.se>
- *
  */
 
 #ifndef _QUORUM_H_
@@ -54,7 +52,7 @@
 
 #define MAX_SLOT_LEN_DCO      (MAX_SLOT_LEN*CLOCK_PHI)    //TODO needs calibration
 
-int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t operation, uint8_t** final_flags);
+int quorum_round_begin(const uint16_t round_number, const uint8_t id, uint16_t* value, uint16_t* tag, uint8_t* operation, uint8_t** final_flags);
 
 int q_is_pending(const uint16_t round_count);
 

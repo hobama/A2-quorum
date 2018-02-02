@@ -1,0 +1,1 @@
+CONTIKI_SOURCEFILES += mw-quorum.c

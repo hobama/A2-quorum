@@ -98,10 +98,11 @@ ifeq ($(CONTIKI_WITH_CHAOS),1)
   MODULES += core/net/mac/chaos/lib/glossy
   MODULES += core/net/mac/chaos/lib/max
   MODULES += core/net/mac/chaos/lib/minmax
-  MODULES += core/net/mac/chaos/lib/sw-quorum   	    
+  MODULES += core/net/mac/chaos/lib/sw-quorum
+  MODULES += core/net/mac/chaos/lib/mw-quorum   	    
   MODULES += core/net/mac/chaos/lib/diss
   MODULES += core/net/mac/chaos/lib/vote
-  MODULES += core/net/mac/chaos/lib/2pc    
+  MODULES += core/net/mac/chaos/lib/2pc
   MODULES += core/net/mac/chaos/lib/3pc    
   MODULES += core/net/mac/chaos/lib/collect    
   MODULES += core/net/mac/chaos/lib/collect-slotted    

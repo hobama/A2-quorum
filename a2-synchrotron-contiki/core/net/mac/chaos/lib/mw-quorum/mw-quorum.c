@@ -29,13 +29,11 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *******************************************************************************/
-/**
+/*
  * \file
- *         SW Quorum Library
+ *         Multi-writer Quorum library
  * \author
- *          
  *         Konstantinos Peratinos <konper@student.chalmers.se>
- *
  */
 
 #include "contiki.h"
@@ -44,7 +42,7 @@
 #include "chaos.h"
 #include "chaos-random-generator.h"
 #include "node.h"
-#include "sw-quorum.h"
+#include "minmax.h"
 #include "chaos-config.h"
 
 #undef ENABLE_COOJA_DEBUG
@@ -92,7 +90,8 @@
 typedef struct __attribute__((packed)) max_t_struct {
   uint16_t value;
   uint16_t tag;
-  uint8_t operation;   // 0 = Write,  1 =  Read 
+  uint8_t writer_id;
+  uint8_t operation;   // 0 = Write,  1 =  Read
   uint8_t flags[];
 } entry_t;
 
@@ -103,7 +102,7 @@ typedef struct __attribute__((packed)) max_t_local_struct {
 
 static int tx = 0;
 static int complete = 0;
-static uint16_t timestamp = 0;
+//static uint16_t timestamp = 0;
 static uint16_t completion_slot, off_slot;
 static int tx_count_complete = 0;
 static int invalid_rx_count = 0;
@@ -123,20 +122,34 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
   if(chaos_txrx_success && current_state == CHAOS_RX) {
     got_valid_rx = 1;
 
-    if (rx_entry->operation) { // Read operation Received
-      if (tx_entry->tag >= rx_entry->tag) {
-        tx_entry->tag = tx_entry->tag;
-        tx_entry->value = tx_entry->value;
-      } else {
-        tx_entry->tag = rx_entry->tag;
-        tx_entry->value = rx_entry->value;
-      }
-    } 
-    else { // Write Operation Receiven
-        tx_entry->tag = rx_entry->tag;
-        tx_entry->value = rx_entry->value;
-      }
+    if (rx_entry->operation) { 
+    // Read operation Received
+        if (tx_entry->tag < rx_entry->tag) {
+            tx_entry->value = rx_entry->value;
+            tx_entry->tag = rx_entry->tag;
+            tx_entry->writer_id = rx_entry->writer_id;
+          }
 
+             /*if (tx_entry->tag == rx_entry->tag && tx_entry->writer_id < rx_entry->writer_id) {
+            tx_entry->value = rx_entry->value;
+            tx_entry->writer_id = rx_entry->writer_id;
+          } else if(tx_entry->tag < rx_entry->tag) {
+          tx_entry->tag = rx_entry->tag;
+          tx_entry->value = rx_entry->value;
+          tx_entry->writer_id = rx_entry->writer_id;
+        }*/
+
+    } else { // Write Operation Receiven
+        if ((tx_entry->tag == rx_entry->tag) && (tx_entry->writer_id > rx_entry->writer_id)) {
+            tx_entry->value = rx_entry->value;
+            tx_entry->tag = rx_entry->tag;
+            tx_entry->writer_id = rx_entry->writer_id;
+          } else if(tx_entry->tag < rx_entry->tag) {
+          tx_entry->tag = rx_entry->tag;
+          tx_entry->value = rx_entry->value;
+          tx_entry->writer_id = rx_entry->writer_id;
+        }
+    }
     //merge flags and do tx decision based on flags
     tx = 0;
     uint16_t flag_sum = 0;
@@ -201,6 +214,7 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
     entry_flags = tx_entry->flags;
     entry_local.entry.value = tx_entry->value;
     entry_local.entry.tag = tx_entry->tag;
+    entry_local.entry.writer_id = tx_entry->writer_id;
   }
 
   /* reporting progress */
@@ -225,7 +239,8 @@ uint16_t quorum_get_off_slot(){
   return off_slot;
 }
 
-int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t operation, uint8_t** final_flags)
+int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t* operation,
+ uint8_t** final_flags)
 {
   off_slot = MAX_ROUND_MAX_SLOTS;
   tx = 0;
@@ -241,19 +256,23 @@ int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16
   memset(&entry_local, 0, sizeof(entry_local));
   entry_local.entry.value = *value;
   entry_local.entry.tag = *tag;
-  entry_local.entry.operation = operation;
-
+  entry_local.entry.writer_id = node_id;
+  entry_local.entry.operation = *operation;
+  
+   
   /* set my flag */
   unsigned int array_index = chaos_node_index / 8;
   unsigned int array_offset = chaos_node_index % 8;
   entry_local.entry.flags[array_index] |= 1 << (array_offset);
 
-  chaos_round(round_number, app_id, (const uint8_t const*)&entry_local.entry, sizeof(entry_t) + quorum_get_flags_length(), MAX_SLOT_LEN_DCO, MAX_ROUND_MAX_SLOTS, quorum_get_flags_length(), process);
+  chaos_round(round_number, app_id, (const uint8_t const*)&entry_local.entry, sizeof(entry_t) + quorum_get_flags_length(), 
+    MAX_SLOT_LEN_DCO, MAX_ROUND_MAX_SLOTS, quorum_get_flags_length(), process);
 
   memcpy(entry_local.entry.flags, entry_flags, quorum_get_flags_length());
   *value = entry_local.entry.value;
   *tag = entry_local.entry.tag;
-  //*operation = entry_local.entry.operation;
+  //*writer_id = entry_local.entry.writer_id;
+  *operation = entry_local.entry.writer_id;
   *final_flags = entry_local.flags;
 
   return completion_slot;
