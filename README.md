@@ -1,11 +1,16 @@
 # A2-Quorum
 
-A2-quorum implements a shared-memory abstraction over dynamic sensor networks, using the A2-agreement over the air system for Sky motes running Contiki Os. The goal of the project is to explore the usage of quorum based systems as a means of vehicle coordination, and was developed as a part of the Autonomous and Cooperative vehicular systems course in Chalmers university.
+A2-quorum implements a shared-memory abstraction over dynamic sensor networks, using the A2-agreement over the air system for Sky motes running Contiki Os. The goal of the project is to explore the usage of quorum based systems as a means of reliable vehicle coordination using low powered sensors. It was developed as a part of the Autonomous and Cooperative vehicular systems course in Chalmers university.
 
 # IMPORTANT
 For the Multi-writer Quorum, make sure the initiator is set to 1!
 #
 
+Running Cooja headless
+
+```
+ant run_nogui -Dargs=../../"simulationfile.csc"
+```
 # A2-Synchrotron
 
 # Network-wide Consensus Utilizing the Capture Effect in Low-power Wireless Networks
