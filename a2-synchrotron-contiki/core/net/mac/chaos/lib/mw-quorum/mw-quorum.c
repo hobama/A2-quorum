@@ -42,7 +42,7 @@
 #include "chaos.h"
 #include "chaos-random-generator.h"
 #include "node.h"
-#include "minmax.h"
+#include "mw-quorum.h"
 #include "chaos-config.h"
 
 #undef ENABLE_COOJA_DEBUG
@@ -122,23 +122,23 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
   if(chaos_txrx_success && current_state == CHAOS_RX) {
     got_valid_rx = 1;
 
-    if (rx_entry->operation) { 
-    // Read operation Received
-        if (tx_entry->tag < rx_entry->tag) {
+    if (rx_entry->operation) {  // Read operation Received
+      if ((tx_entry->tag == rx_entry->tag) && (tx_entry->writer_id < rx_entry->writer_id)) {
+        tx_entry->value = rx_entry->value;
+        tx_entry->tag = rx_entry->tag;
+        tx_entry->writer_id = rx_entry->writer_id;
+        } 
+        else if(tx_entry->tag < rx_entry->tag) {
+        tx_entry->tag = rx_entry->tag;
+        tx_entry->value = rx_entry->value;
+        tx_entry->writer_id = rx_entry->writer_id;
+        }
+
+        /*if (tx_entry->tag < rx_entry->tag) {
             tx_entry->value = rx_entry->value;
             tx_entry->tag = rx_entry->tag;
             tx_entry->writer_id = rx_entry->writer_id;
-          }
-
-             /*if (tx_entry->tag == rx_entry->tag && tx_entry->writer_id < rx_entry->writer_id) {
-            tx_entry->value = rx_entry->value;
-            tx_entry->writer_id = rx_entry->writer_id;
-          } else if(tx_entry->tag < rx_entry->tag) {
-          tx_entry->tag = rx_entry->tag;
-          tx_entry->value = rx_entry->value;
-          tx_entry->writer_id = rx_entry->writer_id;
-        }*/
-
+          }*/
     } else { // Write Operation Receiven
         if ((tx_entry->tag == rx_entry->tag) && (tx_entry->writer_id < rx_entry->writer_id)) {
             tx_entry->value = rx_entry->value;
@@ -153,17 +153,25 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
     //merge flags and do tx decision based on flags
     tx = 0;
     uint16_t flag_sum = 0;
-    int i;
+    uint8_t temp,bc,i;
     for( i = 0; i < FLAGS_LEN; i++){
       COOJA_DEBUG_STR("f");
       tx |= (rx_entry->flags[i] != tx_entry->flags[i]);
       tx_entry->flags[i] |= rx_entry->flags[i];
-      flag_sum += tx_entry->flags[i];
-    }
-    rx_delta = tx;
 
-    //all flags are set? Final flood: transmit result aggressively
-    if( flag_sum >= (FLAG_SUM/2)+1 ){
+      // Counting set bits, using a temp variable else we corrupt flags
+      temp =tx_entry->flags[i];
+
+      //Kerningham's method, as many iterations as the number of set bits
+      for(bc = 0; bc < temp; bc++) { 
+        temp &= temp-1;
+      }
+      flag_sum += bc; 
+    }
+
+    rx_delta = tx;
+    //Enougn flags are set ( N/2+1)? Final flood: transmit result aggressively
+    if( flag_sum >= (chaos_node_count/2)+1 ){
       if(!complete){ //store when we reach completion
         completion_slot = slot_count;
       }
@@ -214,7 +222,7 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
     entry_flags = tx_entry->flags;
     entry_local.entry.value = tx_entry->value;
     entry_local.entry.tag = tx_entry->tag;
-    //entry_local.entry.writer_id = tx_entry->writer_id;
+    entry_local.entry.writer_id = tx_entry->writer_id;
   }
 
   /* reporting progress */
@@ -255,10 +263,10 @@ int quorum_mw_round_begin(const uint16_t round_number, const uint8_t app_id, uin
   memset(&entry_local, 0, sizeof(entry_local));
   entry_local.entry.value = *value;
   entry_local.entry.tag = *tag;
-  entry_local.entry.writer_id = 1;
+  entry_local.entry.writer_id = *writer_id;
+  // We dont need to return the value of operation
   entry_local.entry.operation = operation;
   
-   
   /* set my flag */
   unsigned int array_index = chaos_node_index / 8;
   unsigned int array_offset = chaos_node_index % 8;
@@ -270,8 +278,7 @@ int quorum_mw_round_begin(const uint16_t round_number, const uint8_t app_id, uin
   *value = entry_local.entry.value;
   *tag = entry_local.entry.tag;
   *writer_id = entry_local.entry.writer_id;
-  printf("WID %u\n", entry_local.entry.writer_id);
-  //*operation = entry_local.entry.operation;
+  //printf("WID %u\n", entry_local.entry.writer_id);
   *final_flags = entry_local.flags;
 
   return completion_slot;

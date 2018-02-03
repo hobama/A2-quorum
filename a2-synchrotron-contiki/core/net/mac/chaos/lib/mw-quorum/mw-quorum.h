@@ -61,4 +61,6 @@ int quorum_mw_get_flags_length(void);
 
 uint16_t quorum_mw_get_off_slot();
 
+uint16_t bit_Count(uint8_t* b);
+
 #endif /* _quorum_mw_H_ */

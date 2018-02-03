@@ -118,15 +118,15 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 }
 
 static void round_begin(const uint16_t round_count, const uint8_t id){
-  // Always true for Initiator == 1
+  // Always Set to Read -- Only change for writers
+  // 1 ==  Read --- 0 == Write
   operation = 1;
   // Nodes > 2  --- %2 is a writing round
   if((IS_INITIATOR() || node_id == chaos_node_count) && (round_count_local % 2) == 0) {
     operation = 0;
    	tag = tag+1;
    	writer_id = node_id;
-   	value = node_id*10 + tag;
-   	//printf("Init writing :%u tag is :%u\n", value, tag);	
+   	value = node_id*2 + tag;	
   }
   complete = quorum_mw_round_begin(round_count, id, &value, &tag, operation, &writer_id, &flags);
   off_slot = quorum_mw_get_off_slot();
@@ -135,14 +135,3 @@ static void round_begin(const uint16_t round_count, const uint8_t id){
   //id = node_id;
   process_poll(&chaos_quorum_process);
 }
-
-
-
-
-/* Perform Write every 3 rounds
-  if (round_count % 3 == 0 && IS_INITIATOR()) {
-    tx_entry.entry = entry_local.entry*2+1;
-    //Single writer, we do not need to perform a read
-    tx_entry.tag = ++timestamp;
-    next_state = CHAOS_TX;
-  } */
