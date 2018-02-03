@@ -127,7 +127,7 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
         if (tx_entry->tag < rx_entry->tag) {
             tx_entry->value = rx_entry->value;
             tx_entry->tag = rx_entry->tag;
-            //tx_entry->writer_id = rx_entry->writer_id;
+            tx_entry->writer_id = rx_entry->writer_id;
           }
 
              /*if (tx_entry->tag == rx_entry->tag && tx_entry->writer_id < rx_entry->writer_id) {
@@ -214,7 +214,7 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
     entry_flags = tx_entry->flags;
     entry_local.entry.value = tx_entry->value;
     entry_local.entry.tag = tx_entry->tag;
-    entry_local.entry.writer_id = tx_entry->writer_id;
+    //entry_local.entry.writer_id = tx_entry->writer_id;
   }
 
   /* reporting progress */
@@ -227,19 +227,19 @@ process(uint16_t round_count, uint16_t slot_count, chaos_state_t current_state, 
   return next_state;
 }
 
-int quorum_get_flags_length() {
+int quorum_mw_get_flags_length() {
   return FLAGS_LEN;
 }
 
-int q_is_pending(const uint16_t round_count){
+int quorum_mw_is_pending(const uint16_t round_count){
   return 1;
 }
 
-uint16_t quorum_get_off_slot(){
+uint16_t quorum_mw_get_off_slot(){
   return off_slot;
 }
 
-int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t operation, uint16_t* writer_id, uint8_t** final_flags)
+int quorum_mw_round_begin(const uint16_t round_number, const uint8_t app_id, uint16_t* value, uint16_t* tag, uint8_t operation, uint16_t* writer_id, uint8_t** final_flags)
 {
   off_slot = MAX_ROUND_MAX_SLOTS;
   tx = 0;
@@ -255,7 +255,7 @@ int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16
   memset(&entry_local, 0, sizeof(entry_local));
   entry_local.entry.value = *value;
   entry_local.entry.tag = *tag;
-  entry_local.entry.writer_id = *writer_id;
+  entry_local.entry.writer_id = 1;
   entry_local.entry.operation = operation;
   
    
@@ -264,12 +264,13 @@ int quorum_round_begin(const uint16_t round_number, const uint8_t app_id, uint16
   unsigned int array_offset = chaos_node_index % 8;
   entry_local.entry.flags[array_index] |= 1 << (array_offset);
 
-  chaos_round(round_number, app_id, (const uint8_t const*)&entry_local.entry, sizeof(entry_t) + quorum_get_flags_length(), MAX_SLOT_LEN_DCO, MAX_ROUND_MAX_SLOTS, quorum_get_flags_length(), process);
+  chaos_round(round_number, app_id, (const uint8_t const*)&entry_local.entry, sizeof(entry_t) + quorum_mw_get_flags_length(), MAX_SLOT_LEN_DCO, MAX_ROUND_MAX_SLOTS, quorum_mw_get_flags_length(), process);
 
-  memcpy(entry_local.entry.flags, entry_flags, quorum_get_flags_length());
+  memcpy(entry_local.entry.flags, entry_flags, quorum_mw_get_flags_length());
   *value = entry_local.entry.value;
   *tag = entry_local.entry.tag;
   *writer_id = entry_local.entry.writer_id;
+  printf("WID %u\n", entry_local.entry.writer_id);
   //*operation = entry_local.entry.operation;
   *final_flags = entry_local.flags;
 
