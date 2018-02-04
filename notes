@@ -11,3 +11,7 @@ Quorum_round_begin(round_count,id, operation, &value, &tag, &flags)
 git checkout -b "branch_name" -- make new branch
 
 git checkout "name" --  change branch
+
+2 functionalities
+  * Coordinating Speed in a Plaaton (Single writer - First vehicle deciding)
+  * Virtual TRaffic light ( 0-1-2-3 possible exits - Traffic light coordinating)

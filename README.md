@@ -1,3 +1,16 @@
+# A2-Quorum
+
+A2-quorum implements a shared-memory abstraction over dynamic sensor networks, using the A2-agreement over the air system for Sky motes running Contiki Os. The goal of the project is to explore the usage of quorum based systems as a means of reliable vehicle coordination using low powered sensors. It was developed as a part of the Autonomous and Cooperative vehicular systems course in Chalmers university.
+
+# IMPORTANT
+For the Multi-writer Quorum, make sure the initiator is set to 1!
+#
+
+Running Cooja headless
+
+```
+ant run_nogui -Dargs='../../../../**simulationfile.csc** -contiki=../../../'
+```
 # A2-Synchrotron
 
 # Network-wide Consensus Utilizing the Capture Effect in Low-power Wireless Networks
@@ -34,10 +47,14 @@ You can browse the main part of the implementation under [core/net/mac/chaos](./
 
 ### Running in Cooja
 
+# IMPORTANT
+For the Multi-writer Quorum, make sure the initiator is set to 1!
+#
+
 To run the two-phase commit sample app in Cooja:
 Go to [2PC](./a2-synchrotron-contiki/apps/chaos/2pc) and compile using:
 ```
-make clean && make cooja log=0 printf=1 tx=31 mch=1 pch=0 sec=0 src=2 sync=0 failure=0 dynamic=1 initiator=3 interval=29 max_node_count=32
+make clean && make cooja log=0 printf=1 tx=31 mch=1 pch=0 sec=0 src=2 sync=0 failure=0 dynamic=1 initiator=1 interval=29 max_node_count=32
 ```
 Then, start Cooja and choose one of the simulation files. 
 For example, this one has [32 nodes](./a2-synchrotron-contiki/apps/chaos/2pc/2pc-app-32nodes.csc).

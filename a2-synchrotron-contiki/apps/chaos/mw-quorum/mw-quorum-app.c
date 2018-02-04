@@ -81,11 +81,14 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 		PROCESS_YIELD();
 		if(chaos_has_node_index){
       //if (round_count_local % NODE_COUNT m == chaos_node_index) {}
-        if ((IS_INITIATOR() || node_id == chaos_node_count) && operation == 0) {
-          printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, writer id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, writer_id, chaos_node_count);
+        if ((IS_INITIATOR() || node_id == chaos_node_count) && (round_count_local % 2 == 1)) {
+          printf("{rd %u res} written: %u, ts: %u, fin: %i/%i, n: %u\n",
+           round_count_local, value, tag, complete, off_slot, chaos_node_count);
         }
         else { 
-          printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, writer id: %u, n: %u\n", round_count_local, value, tag, complete, off_slot, writer_id, chaos_node_count);
+          printf("{rd %u res} read: %u, ts: %u, fin: %i/%i, writer id: %u, n: %u\n",
+           round_count_local, value, tag, complete, off_slot, writer_id
+           , chaos_node_count);
         }
 //      int latency = complete *
 //      printf("{rd %u prf} latency = %f, total slot time = %f\n", complete, off_slot);
@@ -121,8 +124,9 @@ static void round_begin(const uint16_t round_count, const uint8_t id){
   // Always Set to Read -- Only change for writers
   // 1 ==  Read --- 0 == Write
   operation = 1;
+
   // Nodes > 2  --- %2 is a writing round
-  if((IS_INITIATOR() || node_id == chaos_node_count) && (round_count_local % 2) == 0) {
+  if((IS_INITIATOR() || node_id == chaos_node_count) && (round_count_local % 2 == 0)) {
     operation = 0;
    	tag = tag+1;
    	writer_id = node_id;
@@ -133,5 +137,6 @@ static void round_begin(const uint16_t round_count, const uint8_t id){
   round_count_local = round_count;
   printf("wid %u\n", writer_id);
   //id = node_id;
+
   process_poll(&chaos_quorum_process);
 }

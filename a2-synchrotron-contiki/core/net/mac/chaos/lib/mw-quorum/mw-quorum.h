@@ -31,10 +31,9 @@
  *******************************************************************************/
 /*
  * \file
- *         Max library
+ *         Multi-writer Quorum library 
  * \author
- *         Beshr Al Nahas <beshr@chalmers.se>
- *         Olaf Landsiedel <olafl@chalmers.se>
+ *         Konstantinos Peratinos <konper@student.chalmers.se>
  */
 
 #ifndef _quorum_mw_H_
