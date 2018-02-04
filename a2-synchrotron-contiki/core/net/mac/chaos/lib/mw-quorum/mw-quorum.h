@@ -36,8 +36,8 @@
  *         Konstantinos Peratinos <konper@student.chalmers.se>
  */
 
-#ifndef _QUORUM_H_
-#define _QUORUM_H_
+#ifndef _quorum_mw_H_
+#define _quorum_mw_H_
 
 #include "chaos.h"
 #include "testbed.h"
@@ -52,12 +52,14 @@
 
 #define MAX_SLOT_LEN_DCO      (MAX_SLOT_LEN*CLOCK_PHI)    //TODO needs calibration
 
-int quorum_round_begin(const uint16_t round_number, const uint8_t id, uint16_t* value, uint16_t* tag, uint8_t* operation, uint8_t** final_flags);
+int quorum_mw_round_begin(const uint16_t round_number, const uint8_t id, uint16_t* value, uint16_t* tag, uint8_t operation, uint16_t* writer_id, uint8_t** final_flags);
 
 int q_is_pending(const uint16_t round_count);
 
-int quorum_get_flags_length(void);
+int quorum_mw_get_flags_length(void);
 
-uint16_t quorum_get_off_slot();
+uint16_t quorum_mw_get_off_slot();
 
-#endif /* _QUORUM_H_ */
+uint16_t bit_Count(uint8_t* b);
+
+#endif /* _quorum_mw_H_ */

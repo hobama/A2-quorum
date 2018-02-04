@@ -49,7 +49,7 @@
 static uint16_t value = 0;
 static uint16_t tag = 0;
 static uint8_t operation = 1;
-static uint8_t writer_id = 1;
+static uint16_t writer_id = 0;
 static uint16_t round_count_local = 0;
 static uint8_t* flags;
 static uint16_t complete = 0;
@@ -95,7 +95,7 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
       if(complete == 0){
         int i;
         printf("{rd %u fl}", round_count_local);
-        for( i=0; i<quorum_get_flags_length(); i++ ){
+        for( i=0; i<quorum_mw_get_flags_length(); i++ ){
           printf(" %02x", flags[i]);
         }
         printf("\n");
@@ -121,31 +121,22 @@ PROCESS_THREAD(chaos_quorum_process, evda, data)
 }
 
 static void round_begin(const uint16_t round_count, const uint8_t id){
-  // Always true for Initiator == 1
+  // Always Set to Read -- Only change for writers
+  // 1 ==  Read --- 0 == Write
   operation = 1;
-  writer_id = node_id;
+
   // Nodes > 2  --- %2 is a writing round
   if((IS_INITIATOR() || node_id == chaos_node_count) && (round_count_local % 2 == 0)) {
     operation = 0;
-   	tag = tag+node_id;
-   	value = node_id*10 + tag;
+   	tag = tag+1;
+   	writer_id = node_id;
+   	value = node_id*2 + tag;	
   }
-  complete = quorum_round_begin(round_count, id, &value, &tag, &operation, &flags);
-  //complete = quorum_round_begin(round_count, id, &value, &tag, &operation, &flags);
-  off_slot = quorum_get_off_slot();
+  complete = quorum_mw_round_begin(round_count, id, &value, &tag, operation, &writer_id, &flags);
+  off_slot = quorum_mw_get_off_slot();
   round_count_local = round_count;
-  writer_id = operation;
-  printf("{The writer is : %u\n", writer_id);
+  printf("wid %u\n", writer_id);
+  //id = node_id;
+
   process_poll(&chaos_quorum_process);
 }
-
-
-
-
-/* Perform Write every 3 rounds
-  if (round_count % 3 == 0 && IS_INITIATOR()) {
-    tx_entry.entry = entry_local.entry*2+1;
-    //Single writer, we do not need to perform a read
-    tx_entry.tag = ++timestamp;
-    next_state = CHAOS_TX;
-  } */

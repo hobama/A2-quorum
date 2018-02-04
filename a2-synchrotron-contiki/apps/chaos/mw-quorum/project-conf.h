@@ -48,7 +48,7 @@
 #define MAX_ROUND_MAX_SLOTS   (127)
 //join parameters
 #define JOIN_ROUND_MAX_SLOTS   (127)
-#define JOIN_ROUNDS_AFTER_BOOTUP (10)
+#define JOIN_ROUNDS_AFTER_BOOTUP (5)
 #else
 #define MAX_ROUND_MAX_SLOTS   (254)
 //join parameters
