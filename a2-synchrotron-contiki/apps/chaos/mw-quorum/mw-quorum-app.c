@@ -135,7 +135,7 @@ static void round_begin(const uint16_t round_count, const uint8_t id){
   complete = quorum_mw_round_begin(round_count, id, &value, &tag, operation, &writer_id, &flags);
   off_slot = quorum_mw_get_off_slot();
   round_count_local = round_count;
-  printf("wid %u\n", writer_id);
+  //printf("wid %u\n", writer_id);
   //id = node_id;
 
   process_poll(&chaos_quorum_process);
