@@ -7,7 +7,7 @@
   <project EXPORT="discard">[APPS_DIR]/collect-view</project>
   <project EXPORT="discard">[APPS_DIR]/powertracker</project>
   <simulation>
-    <title>sim12.2</title>
+    <title>sim12.4</title>
     <randomseed>56784</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
