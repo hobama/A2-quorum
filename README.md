@@ -10,7 +10,10 @@ Running Cooja headless
 
 ```
 ant run_nogui -Dargs='../../../../Simulation-files/**simulationfile.csc** -contiki=../../../'
+
 ```
+For multiple simulations, use the script file inside Cooja folder
+
 # A2-Synchrotron
 
 # Network-wide Consensus Utilizing the Capture Effect in Low-power Wireless Networks
