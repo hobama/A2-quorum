@@ -1,0 +1,14 @@
+----------------------------------------------
+log_sim40.1.txt
+Successful Writes:43 Successful Reads:32
+Failed Writes:467 Failed Reads:492
+Avg Complete:15.3625273694 Avg Offslot:40.3819205505
+Compl/offslot Ratio:0.380430825478 Not joined:2
+----------------------------------------------
+log_sim40.2.txt
+Successful Writes:28 Successful Reads:37
+Failed Writes:514 Failed Reads:459
+Avg Complete:15.2587573511 Avg Offslot:40.2552416262
+Compl/offslot Ratio:0.379050199046 Not joined:0
+----------------------------------------------
+log_sim40.3.txt

@@ -1,0 +1,24 @@
+----------------------------------------------
+log_sim6.1.txt
+Successful Writes:718 Successful Reads:718
+Failed Writes:0 Failed Reads:0
+Avg Complete:4.7387565369 Avg Offslot:34.4571760604
+Compl/offslot Ratio:0.137525969296 Not joined:11
+----------------------------------------------
+log_sim6.2.txt
+Successful Writes:180 Successful Reads:339
+Failed Writes:319 Failed Reads:155
+Avg Complete:14.070806962 Avg Offslot:51.1362737342
+Compl/offslot Ratio:0.275162931018 Not joined:45
+----------------------------------------------
+log_sim6.3.txt
+Successful Writes:95 Successful Reads:102
+Failed Writes:614 Failed Reads:619
+Avg Complete:7.77050552394 Avg Offslot:39.4819216605
+Compl/offslot Ratio:0.196811735527 Not joined:3
+----------------------------------------------
+log_sim6.4.txt
+Successful Writes:721 Successful Reads:719
+Failed Writes:0 Failed Reads:1
+Avg Complete:7.66701376837 Avg Offslot:44.8460025454
+Compl/offslot Ratio:0.170963147955 Not joined:0
