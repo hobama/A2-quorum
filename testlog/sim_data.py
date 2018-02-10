@@ -15,7 +15,8 @@ nc=40
 
 for l in range(1,5):
 	# Multiple sim logs with 1 execution
-	fn = 'log_sim'+str(nc)+'.'+str(l)+'.txt'
+	#fn = 'log_sim'+str(nc)+'.'+str(l)+'.txt'
+	fn = 'log_sim'+str(nc)+'.txt'
 	#fn ='test3.txt'
 	print "----------------------------------------------"
 	print fn
