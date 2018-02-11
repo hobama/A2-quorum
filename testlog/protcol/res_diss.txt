@@ -1,0 +1,68 @@
+----------------------------------------------
+log_diss61.txt_new.txt
+Successful Writes:246 Successful Reads:246
+Failed Writes:0 Failed Reads:0
+Avg Complete:9.07056638812 Avg Offslot:26.7995589601
+Compl/offslot Ratio:0.338459539638 Not joined:6
+----------------------------------------------
+log_diss62.txt_new.txt
+Successful Writes:363 Successful Reads:362
+Failed Writes:0 Failed Reads:0
+Avg Complete:9.03672807322 Avg Offslot:26.6191634805
+Compl/offslot Ratio:0.339482045702 Not joined:3
+----------------------------------------------
+log_diss63.txt_new.txt
+Successful Writes:388 Successful Reads:388
+Failed Writes:0 Failed Reads:0
+Avg Complete:8.78387045054 Avg Offslot:26.328042328
+Compl/offslot Ratio:0.33363173536 Not joined:3
+----------------------------------------------
+log_diss121.txt_new.txt
+Successful Writes:137 Successful Reads:136
+Failed Writes:0 Failed Reads:0
+Avg Complete:17.5113122172 Avg Offslot:34.967571644
+Compl/offslot Ratio:0.500787197792 Not joined:6
+----------------------------------------------
+log_diss122.txt_new.txt
+Successful Writes:192 Successful Reads:192
+Failed Writes:0 Failed Reads:0
+Avg Complete:14.377261884 Avg Offslot:31.927328795
+Compl/offslot Ratio:0.450312081424 Not joined:9
+----------------------------------------------
+log_diss123.txt_new.txt
+Successful Writes:190 Successful Reads:190
+Failed Writes:0 Failed Reads:0
+Avg Complete:17.1808032129 Avg Offslot:34.7101204819
+Compl/offslot Ratio:0.494979647846 Not joined:6
+----------------------------------------------
+log_diss241.txt_new.txt
+Successful Writes:161 Successful Reads:161
+Failed Writes:0 Failed Reads:0
+Avg Complete:20.8184053531 Avg Offslot:38.4551757498
+Compl/offslot Ratio:0.541368097979 Not joined:8
+----------------------------------------------
+log_diss242.txt_new.txt
+Successful Writes:1 Successful Reads:1
+Failed Writes:0 Failed Reads:0
+Avg Complete:20.619088215 Avg Offslot:38.6961393253
+Compl/offslot Ratio:0.532846133348 Not joined:15
+----------------------------------------------
+log_diss243.txt_new.txt
+Successful Writes:221 Successful Reads:220
+Failed Writes:0 Failed Reads:0
+Avg Complete:21.0346929772 Avg Offslot:38.3186539927
+Compl/offslot Ratio:0.548941332365 Not joined:3
+----------------------------------------------
+log_diss401.txt_new.txt
+Successful Writes:8 Successful Reads:8
+Failed Writes:0 Failed Reads:0
+Avg Complete:27.9740562374 Avg Offslot:46.280306561
+Compl/offslot Ratio:0.60444837807 Not joined:9
+----------------------------------------------
+log_diss402.txt_new.txt
+Successful Writes:4 Successful Reads:4
+Failed Writes:0 Failed Reads:0
+Avg Complete:23.5496009122 Avg Offslot:49.8095781072
+Compl/offslot Ratio:0.472792619555 Not joined:3
+----------------------------------------------
+log_diss403.txt_new.txt
