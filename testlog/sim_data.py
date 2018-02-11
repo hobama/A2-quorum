@@ -11,12 +11,12 @@ import re
 regex = re.compile(r"(\d+/\d+)")
 
 ## The number of Nodes in the simulation -- Change before running
-nc=40
+nc=12
 
 for l in range(1,5):
 	# Multiple sim logs with 1 execution
 	#fn = 'log_sim'+str(nc)+'.'+str(l)+'.txt'
-	fn = 'log_sim'+str(nc)+'.txt'
+	fn = 'log_sim'+str(nc)+str(l)+'.txt'+'_new.txt'
 	#fn ='test3.txt'
 	print "----------------------------------------------"
 	print fn
