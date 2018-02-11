@@ -11,7 +11,7 @@ import re
 regex = re.compile(r"(\d+/\d+)")
 
 ## The number of Nodes in the simulation -- Change before running
-nc=6
+nc=40
 
 for l in range(1,7):
 	# Multiple sim logs with 1 execution

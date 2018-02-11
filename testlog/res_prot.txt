@@ -1,0 +1,134 @@
+----------------------------------------------
+log_sim61.txt_new.txt
+Successful Writes:522 Successful Reads:522
+Failed Writes:0 Failed Reads:0
+Avg Complete:3.87835249042 Avg Offslot:30.3735632184
+Compl/offslot Ratio:0.127688426364 Not joined:0
+----------------------------------------------
+log_sim62.txt_new.txt
+Successful Writes:522 Successful Reads:521
+Failed Writes:0 Failed Reads:0
+Avg Complete:3.87252396166 Avg Offslot:30.2389776358
+Compl/offslot Ratio:0.128063984448 Not joined:0
+----------------------------------------------
+log_sim63.txt_new.txt
+Successful Writes:718 Successful Reads:718
+Failed Writes:0 Failed Reads:0
+Avg Complete:4.7387565369 Avg Offslot:34.4571760604
+Compl/offslot Ratio:0.137525969296 Not joined:11
+----------------------------------------------
+log_sim64.txt_new.txt
+Successful Writes:95 Successful Reads:102
+Failed Writes:614 Failed Reads:619
+Avg Complete:7.77050552394 Avg Offslot:39.4819216605
+Compl/offslot Ratio:0.196811735527 Not joined:3
+----------------------------------------------
+log_sim65.txt_new.txt
+Successful Writes:721 Successful Reads:719
+Failed Writes:0 Failed Reads:1
+Avg Complete:7.66701376837 Avg Offslot:44.8460025454
+Compl/offslot Ratio:0.170963147955 Not joined:0
+----------------------------------------------
+log_sim66.txt_new.txt
+----------------------------------------------
+log_sim121.txt_new.txt
+Successful Writes:520 Successful Reads:519
+Failed Writes:0 Failed Reads:0
+Avg Complete:7.81195826645 Avg Offslot:41.7682985554
+Compl/offslot Ratio:0.187030799354 Not joined:8
+----------------------------------------------
+log_sim122.txt_new.txt
+Successful Writes:520 Successful Reads:519
+Failed Writes:0 Failed Reads:0
+Avg Complete:7.81189310649 Avg Offslot:41.7696011556
+Compl/offslot Ratio:0.187023406745 Not joined:7
+----------------------------------------------
+log_sim123.txt_new.txt
+Successful Writes:481 Successful Reads:475
+Failed Writes:36 Failed Reads:48
+Avg Complete:7.93436873747 Avg Offslot:40.3885270541
+Compl/offslot Ratio:0.196451054698 Not joined:0
+----------------------------------------------
+log_sim124.txt_new.txt
+Successful Writes:57 Successful Reads:55
+Failed Writes:660 Failed Reads:664
+Avg Complete:11.6258826009 Avg Offslot:35.5854146907
+Compl/offslot Ratio:0.326703586342 Not joined:4
+----------------------------------------------
+log_sim125.txt_new.txt
+Successful Writes:210 Successful Reads:192
+Failed Writes:302 Failed Reads:337
+Avg Complete:8.97185511503 Avg Offslot:37.6396231033
+Compl/offslot Ratio:0.238361980682 Not joined:1
+----------------------------------------------
+log_sim126.txt_new.txt
+Successful Writes:21 Successful Reads:36
+Failed Writes:501 Failed Reads:479
+Avg Complete:8.95196410986 Avg Offslot:38.1922529817
+Compl/offslot Ratio:0.23439214529 Not joined:0
+----------------------------------------------
+log_sim241.txt_new.txt
+Successful Writes:521 Successful Reads:521
+Failed Writes:0 Failed Reads:0
+Avg Complete:12.6497920665 Avg Offslot:44.5566618682
+Compl/offslot Ratio:0.283903495822 Not joined:0
+----------------------------------------------
+log_sim242.txt_new.txt
+Successful Writes:517 Successful Reads:516
+Failed Writes:0 Failed Reads:0
+Avg Complete:12.6551904858 Avg Offslot:44.3747228381
+Compl/offslot Ratio:0.285189172492 Not joined:9
+----------------------------------------------
+log_sim243.txt_new.txt
+Successful Writes:518 Successful Reads:517
+Failed Writes:0 Failed Reads:0
+Avg Complete:12.6781475073 Avg Offslot:44.7424053434
+Compl/offslot Ratio:0.283358648469 Not joined:9
+----------------------------------------------
+log_sim244.txt_new.txt
+Successful Writes:186 Successful Reads:155
+Failed Writes:318 Failed Reads:379
+Avg Complete:14.2428355958 Avg Offslot:42.8797672915
+Compl/offslot Ratio:0.33215748348 Not joined:2
+----------------------------------------------
+log_sim245.txt_new.txt
+Successful Writes:508 Successful Reads:506
+Failed Writes:17 Failed Reads:11
+Avg Complete:12.6747970796 Avg Offslot:44.937104866
+Compl/offslot Ratio:0.282056378963 Not joined:0
+----------------------------------------------
+log_sim401.txt_new.txt
+Successful Writes:467 Successful Reads:468
+Failed Writes:47 Failed Reads:51
+Avg Complete:16.8527329368 Avg Offslot:50.4800082387
+Compl/offslot Ratio:0.333849647115 Not joined:10
+----------------------------------------------
+log_sim402.txt_new.txt
+Successful Writes:483 Successful Reads:480
+Failed Writes:32 Failed Reads:38
+Avg Complete:16.9297331478 Avg Offslot:50.6196787657
+Compl/offslot Ratio:0.334449636202 Not joined:9
+----------------------------------------------
+log_sim403.txt_new.txt
+Successful Writes:481 Successful Reads:483
+Failed Writes:41 Failed Reads:31
+Avg Complete:16.893131308 Avg Offslot:50.7928317938
+Compl/offslot Ratio:0.33258888531 Not joined:6
+----------------------------------------------
+log_sim404.txt_new.txt
+Successful Writes:467 Successful Reads:468
+Failed Writes:47 Failed Reads:51
+Avg Complete:16.8527329368 Avg Offslot:50.4800082387
+Compl/offslot Ratio:0.333849647115 Not joined:10
+----------------------------------------------
+log_sim405.txt_new.txt
+Successful Writes:43 Successful Reads:32
+Failed Writes:467 Failed Reads:492
+Avg Complete:15.3625273694 Avg Offslot:40.3819205505
+Compl/offslot Ratio:0.380430825478 Not joined:2
+----------------------------------------------
+log_sim406.txt_new.txt
+Successful Writes:28 Successful Reads:37
+Failed Writes:514 Failed Reads:459
+Avg Complete:15.2587573511 Avg Offslot:40.2552416262
+Compl/offslot Ratio:0.379050199046 Not joined:0

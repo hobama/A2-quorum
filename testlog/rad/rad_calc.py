@@ -7,9 +7,9 @@ __author__ = "Konstantinos Peratinos" """
 
 from math import sqrt
 ## The number of Nodes in the simulation -- Change before running
-nc=6
+nc=40
 
-for l in range(1,3):
+for l in range(1,6):
 	# Multiple sim logs with 1 execution
 	fn = 'Rad_sim'+str(nc)+str(l)+'.txt'#+"_new.txt"
 	#fn ='test3.txt'
@@ -45,7 +45,7 @@ for l in range(1,3):
 			dev_rx += pow(int(temp[9]) - s_rx/lc, 2)
 			dev_dc += pow(int(temp[12]) - s_dc/lc, 2)
 
-		print "2nd line Tx, 3rd RX, 4th Duty cycle 5th Interval lines =" + str(z+1)
+		print "2nd line Tx, 3rd RX, 4th Duty cycle 5th Interval"
 		print str(s_tx/lc) + " " + str(sqrt(dev_tx/lc))
 		print str(s_rx/lc)  + " " + str(sqrt(dev_rx/lc))
 		print str(s_dc/lc) + " " + str(sqrt(dev_dc/lc))
