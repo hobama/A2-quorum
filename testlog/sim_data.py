@@ -11,9 +11,9 @@ import re
 regex = re.compile(r"(\d+/\d+)")
 
 ## The number of Nodes in the simulation -- Change before running
-nc=12
+nc=6
 
-for l in range(1,5):
+for l in range(1,7):
 	# Multiple sim logs with 1 execution
 	#fn = 'log_sim'+str(nc)+'.'+str(l)+'.txt'
 	fn = 'log_sim'+str(nc)+str(l)+'.txt'+'_new.txt'
@@ -34,7 +34,7 @@ for l in range(1,5):
 	not_joined = 0
 	z = 0
 
-	with open(fn) as f:
+	with open('protcol/'+fn) as f:
 		i = 1
 		for z,line in enumerate(f):
 			## Disregarding output from nodes that didnt join

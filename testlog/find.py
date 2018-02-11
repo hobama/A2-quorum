@@ -1,7 +1,7 @@
-"""Simulation Results filtering
+"""Simulation Results error correction
 
 This modules filters through long files of simulation data produced by COOJA
-and counts the number of Successful read and write rounds
+and searches for missing lines which could corrupt data of data scripts
 
 __author__ = "Konstantinos Peratinos" """
 
@@ -9,11 +9,11 @@ from sets import Set
 elem =  set()
 tempzset = set()
 ## The number of Nodes in the simulation -- Change before running
-nc=12
+nc=40
 
 for i in range (1,nc+1) :
 	elem.add(str(i))
-for l in range(1,5):
+for l in range(1,7):
 	# Multiple sim logs with 1 execution
 	fn = 'log_sim'+str(nc)+str(l)+'.txt'#+"_new.txt"
 	#fn ='test3.txt'
